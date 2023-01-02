@@ -1,4 +1,4 @@
-package pl.ormlite.example;
+package pl.ormlite.example.Model;
 
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
@@ -7,7 +7,7 @@ import com.j256.ormlite.table.DatabaseTable;
 import java.util.Date;
 
 @DatabaseTable(tableName = "books")
-public class Book {
+public class Book implements BaseModel {
 
     public Book() {
     }
@@ -16,15 +16,15 @@ public class Book {
     private int id;
     @DatabaseField(columnName = "TITLE", canBeNull = false )
     private String title;
-    @DatabaseField(columnName = "AUTHOR")
-    private String author;
+    @DatabaseField(columnName = "AUTHOR_ID", foreign = true, foreignAutoCreate = true, foreignAutoRefresh = true)
+    private Author author;
     @DatabaseField(columnName = "DESCRIPTION", dataType = DataType.LONG_STRING) //zmapowanie na inny typ niż domyślny - tutaj domyślny to VARCHAR
     private String description;
     @DatabaseField(columnName = "ISBN", unique = true)
     private String isbn;
     @DatabaseField(columnName = "ADDED_DATE")
     private Date addedDate;
-    @DatabaseField(columnName = "DATE_RELEASE", dataType = DataType.DATE_STRING, format = "yyyy-MM-DD")
+    @DatabaseField(columnName = "DATE_RELEASE", dataType = DataType.DATE_STRING, format = "dd/MM/yyyy")
     private Date dateRelease;
     @DatabaseField(columnName = "RATING", width = 1) //ograniczenie do ilości znakó - tutaj tylko jedna ocena od 1 do 5
     private String rating;
@@ -41,11 +41,11 @@ public class Book {
         this.title = title;
     }
 
-    public String getAuthor() {
+    public Author getAuthor() {
         return author;
     }
 
-    public void setAuthor(String author) {
+    public void setAuthor(Author author) {
         this.author = author;
     }
 
@@ -113,11 +113,13 @@ public class Book {
         this.id = id;
     }
 
+
     @Override
     public String toString() {
         return "Book{" +
                 "id=" + id +
                 ", title='" + title + '\'' +
+                ", author=" + author +
                 ", description='" + description + '\'' +
                 ", isbn='" + isbn + '\'' +
                 ", addedDate=" + addedDate +
